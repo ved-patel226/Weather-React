@@ -71,5 +71,36 @@ def rain_7days_which():
     return jsonify(precipitation_by_date)
 
 
+@app.route("/temp/7days/amount")
+def temp7Days():
+    url = "https://api.open-meteo.com/v1/forecast"
+    params = {
+        "latitude": 52.52,
+        "longitude": 13.41,
+        "hourly": "temperature_2m",
+        "forecast_days": 7,
+    }
+    response = requests.get(url, params=params)
+    data = response.json()
+
+    temperature_by_date = defaultdict(list)
+
+    for time, temperature in zip(
+        data["hourly"]["time"], data["hourly"]["temperature_2m"]
+    ):
+        date = time.split("T")[0]
+        temperature_by_date[date].append(temperature)
+
+    avg_temperature_by_date = {
+        date: sum(temps) / len(temps) for date, temps in temperature_by_date.items()
+    }
+
+    avg_temperature_by_date = {
+        date: int(round(temp, 0)) for date, temp in avg_temperature_by_date.items()
+    }
+
+    return jsonify(avg_temperature_by_date)
+
+
 if __name__ == "__main__":
     app.run(debug=True, port=5001)

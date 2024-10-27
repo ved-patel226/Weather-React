@@ -1,7 +1,13 @@
 import React from "react";
 import Rain7days from "./CardSubComponents/7daysRain";
+import DaysTemp from "./CardSubComponents/7daysTemp";
 
-function Cards({ rain7Days }: CardProps) {
+interface CardProps {
+  rain7Days: { [key: string]: number[] };
+  temp7Days: { [key: string]: number[] };
+}
+
+function Cards({ rain7Days, temp7Days }: CardProps) {
   const currentDate = new Date().toLocaleDateString();
   const dayOfWeek = new Date().toLocaleDateString("en-US", { weekday: "long" });
 
@@ -20,7 +26,8 @@ function Cards({ rain7Days }: CardProps) {
             <h2 className="card-title text-2xl w-fit">{currentDate}</h2>
           </div>
           {/* Cloud/Rain cloud */}
-          <Rain7days rain7Days={rain7Days} />
+
+          <Rain7days rain7Days={rain7Days} temp7Days={temp7Days} />
         </div>
       </div>
     </div>
